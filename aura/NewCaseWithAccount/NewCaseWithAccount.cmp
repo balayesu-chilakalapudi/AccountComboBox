@@ -1,0 +1,98 @@
+<aura:component implements="lightning:isUrlAddressable" controller="AccountController">
+    <!-- Attributes -->
+    <aura:attribute name="isOpen" type="Boolean" default="true" />
+    <aura:attribute name="isOpenCaseModel" type="Boolean" default="false" />
+    <aura:attribute name="caseId" type="String" default="" />
+    <aura:attribute name="selectedAccountIds" type="String" default="" />
+    <aura:attribute name="caseObj" type="Case" default="{'sObjectType':'Case'}" />
+    <!-- Modal -->
+    <aura:if isTrue="{!v.isOpen}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">New Case With Account</h2>
+                </header>
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <c:accountComboBox aura:id="acclWCComponent" oneditsave="{!c.editsavehandler}" />
+                </div>
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <lightning:button label="Submit" variant="brand" onclick="{!c.saveLwcData}"/>
+                    <lightning:button label="Cancel" onclick="{!c.closeModal}" class="slds-m-right_small"/>
+                    <!--
+                    <lightning:button label="Back" variant="brand" onclick="{!c.saveChanges}"/>
+					-->
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+    <!-- Modal -->
+    <aura:if isTrue="{!v.isOpenCaseModel}">
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-modal__title">New Case With Account</h2>
+                </header>
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning:recordEditForm 
+                                              objectApiName="Case"
+                                              onsuccess="{!c.handleSuccess}"
+                                              onerror="{!c.handleError}"                                              
+                                              >
+                        <!-- Display any form errors -->
+                        <lightning:messages />
+                        
+                        <!-- Two-column layout using SLDS grid -->
+                        <div class="slds-grid slds-gutters">
+                            
+                            <!-- Left Column -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="Subject" value="{!v.caseObj.Subject}" />
+                                <lightning:inputField fieldName="Status" value="{!v.caseObj.Status}" />
+                            </div>
+                            
+                            <!-- Right Column -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="Origin" value="{!v.caseObj.Origin}" />
+                                <lightning:inputField fieldName="Priority" value="{!v.caseObj.Priority}" />
+                            </div>
+                            
+                        </div>
+                        <br />
+                        <div class="slds-grid slds-gutters">
+                            
+                            <!-- Left Column -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="AccountId" value="{!v.caseObj.AccountId}" />
+                                <lightning:inputField fieldName="Type" value="{!v.caseObj.Type}" />
+                            </div>
+                            
+                            <!-- Right Column -->
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning:inputField fieldName="ContactId" value="{!v.caseObj.ContactId}" />
+                                <lightning:inputField fieldName="Reason" value="{!v.caseObj.Reason}" />
+                            </div>
+                            
+                        </div>
+                        
+                        <footer class="slds-modal__footer">
+                            <lightning:button label="Cancel" onclick="{!c.closeCaseModal}" class="slds-m-right_small"/>
+                            <lightning:button variant="brand" onclick="{!c.saveCaseData}" name="save" label="Save Case" />
+                        </footer>
+                    </lightning:recordEditForm>
+                </div>
+                <!-- Modal Footer -->
+                
+            </div>
+            
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    
+</aura:component>

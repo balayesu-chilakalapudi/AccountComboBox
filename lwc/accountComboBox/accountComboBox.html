@@ -1,0 +1,31 @@
+<template>
+ <lightning-card title="Select Accounts" icon-name="custom:custom63">
+     <div class="slds-p-around_medium">
+         <!-- Multi-select combobox -->
+         <lightning-input 
+         label="Search Accounts" 
+         value={searchQuery} 
+         onchange={handleSearchChange} 
+         placeholder="Search for an account"
+     ></lightning-input>
+         <lightning-dual-listbox 
+             name="accounts" 
+             label="Select Accounts" 
+             source-label="Available Accounts" 
+             selected-label="Selected Accounts"
+             options={filteredAccounts} 
+             value={selectedAccounts}
+             onchange={handleAccountSelection}
+             message-when-empty="No Accounts Available"
+         ></lightning-dual-listbox>
+        <!--
+         <lightning-button 
+             variant="brand" 
+             label="Submit" 
+             onclick={handleSubmit} 
+             class="slds-m-top_medium">
+         </lightning-button>
+         -->
+     </div>
+ </lightning-card>
+</template>
