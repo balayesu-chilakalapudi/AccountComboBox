@@ -63,34 +63,46 @@
             "slideDevName": "detail"
         });
         navEvt.fire();*/
-       component.set("v.isOpenCaseModel", false);
-       window.open('/'+caseId,'_self');
-   },
+        component.set("v.isOpenCaseModel", false);
+        window.open('/'+caseId,'_self');
+    },
     
     handleError : function(component, event, helper) {
         console.error('Error creating case: ', event.getParams());
-    },    
+    }, 
+    
+   
     saveCaseData:function(component,event,helper){
         console.log('saveCaseData=======');
         try{
             let selectedAccountIds=component.get("v.selectedAccountIds");
             let caseObj=component.get("v.caseObj");
-            var action = component.get("c.saveAccountOnCase");
-            let params={ selecteAccounts: selectedAccountIds,
-                        caseObj:caseObj };
-            console.log('params:'+JSON.stringify(params));
-            action.setParams(params);
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    let caseId=response.getReturnValue();
-                    component.set("v.caseId", caseId);
-                    window.open('/'+caseId,'_self');
-                } else {
-                    console.error("Error: " + response.getError());
-                }
-            });            
-            $A.enqueueAction(action);   
+            if(helper.handleInputValidation(component,event)){
+                var action = component.get("c.saveAccountOnCase");
+                let params={ selecteAccounts: selectedAccountIds,
+                            caseObj:caseObj };
+                console.log('params:'+JSON.stringify(params));
+                action.setParams(params);
+                action.setCallback(this, function(response) {
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        let caseId=response.getReturnValue();
+                        component.set("v.caseId", caseId);
+                        window.open('/'+caseId,'_self');
+                    } else {
+                        console.error("Error: " + response.getError());
+                    }
+                });            
+                $A.enqueueAction(action);  
+            }else{
+                 var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "title": "Warning",
+            "message": "Please fill required fields.",
+            "type": "warning"
+        });
+        toastEvent.fire();
+            }
         }catch(err){
             console.log(err.stack);
         }
