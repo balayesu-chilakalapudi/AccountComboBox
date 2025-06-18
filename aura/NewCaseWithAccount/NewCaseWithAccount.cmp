@@ -3,8 +3,12 @@
     <aura:attribute name="isOpen" type="Boolean" default="true" />
     <aura:attribute name="isOpenCaseModel" type="Boolean" default="false" />
     <aura:attribute name="caseId" type="String" default="" />
+    <aura:attribute name="status" type="String" default="" />
     <aura:attribute name="selectedAccountIds" type="String" default="" />
     <aura:attribute name="caseObj" type="Case" default="{'sObjectType':'Case'}" />
+    <aura:attribute name="validation_invalid" type="Boolean" default="false" />
+    <aura:attribute name="errors" type="String" default=""/>
+    
     <!-- Modal -->
     <aura:if isTrue="{!v.isOpen}">
         <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
@@ -53,8 +57,9 @@
                             
                             <!-- Left Column -->
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="Subject" value="{!v.caseObj.Subject}" />
-                                <lightning:inputField fieldName="Status" value="{!v.caseObj.Status}" />
+                                <lightning:inputField aura:id="subjectField" fieldName="Subject" value="{!v.caseObj.Subject}" required="true"/>
+                                <lightning:inputField aura:id="statusField" fieldName="Status" value="{!v.caseObj.Status}" required="true" />
+                                 <lightning:inputField fieldName="Description" value="{!v.caseObj.Description}" />
                             </div>
                             
                             <!-- Right Column -->
@@ -69,21 +74,26 @@
                             
                             <!-- Left Column -->
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="AccountId" value="{!v.caseObj.AccountId}" />
-                                <lightning:inputField fieldName="Type" value="{!v.caseObj.Type}" />
+                                <lightning:inputField fieldName="Support_is_for__c" value="{!v.caseObj.Support_is_for__c}" required="true"  />
+                                <lightning:inputField fieldName="Support_Delivery_Level__c" value="{!v.caseObj.Support_Delivery_Level__c}" required="true"  />
+                                <lightning:inputField fieldName="Support_Strategic_Objective__c" value="{!v.caseObj.Support_Strategic_Objective__c}" required="true"  />
+                                <lightning:inputField fieldName="What_kind_of_support_is_it__c" value="{!v.caseObj.What_kind_of_support_is_it__c}" required="true"  />
+                            
                             </div>
                             
                             <!-- Right Column -->
                             <div class="slds-col slds-size_1-of-2">
-                                <lightning:inputField fieldName="ContactId" value="{!v.caseObj.ContactId}" />
-                                <lightning:inputField fieldName="Reason" value="{!v.caseObj.Reason}" />
+                                <lightning:inputField fieldName="Type" value="{!v.caseObj.Type}" required="true"/>
+                                <lightning:inputField fieldName="Area_Specialism__c" value="{!v.caseObj.Area_Specialism__c}" required="true"/>
+                                <lightning:inputField fieldName="Support_NIF_Priority__c" value="{!v.caseObj.Support_NIF_Priority__c}" required="true"/>
+                                <lightning:inputField fieldName="Support_NIF_Driver__c" value="{!v.caseObj.Support_NIF_Driver__c}" required="true" />
                             </div>
                             
                         </div>
                         
                         <footer class="slds-modal__footer">
                             <lightning:button label="Cancel" onclick="{!c.closeCaseModal}" class="slds-m-right_small"/>
-                            <lightning:button variant="brand" onclick="{!c.saveCaseData}" name="save" label="Save Case" />
+                            <lightning:button variant="brand" onclick="{!c.saveCaseData}" name="save" label="Save Case" disabled="{!v.validation_invalid}" />
                         </footer>
                     </lightning:recordEditForm>
                 </div>
